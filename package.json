@@ -1,7 +1,7 @@
 {
     "name": "di",
     "author": "Sebastien Couture",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "repository": {
         "type": "git",
         "url": "git://github.com/sebastiencouture/di.git"
