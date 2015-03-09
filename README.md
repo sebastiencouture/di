@@ -1,4 +1,4 @@
-DI.js
+DI.js [![Build Status](https://secure.travis-ci.org/sebastiencouture/di.png?branch=master)](https://travis-ci.org/sebastiencouture/di)
 ===
 
 Dependency injection framework for the browser and Node.js.
@@ -39,7 +39,9 @@ There is also a global UMD compliant build available in the `dist` folder. The b
 
 ## Browser Support
 
-IE 9+. IE6+ support is available using an ES5 polyfill such as [ES5-Shim](https://github.com/es-shims/es5-shim)
+IE 9+
+
+IE6+ support is available using an ES5 polyfill such as [ES5-Shim](https://github.com/es-shims/es5-shim)
 
 ## License
 
