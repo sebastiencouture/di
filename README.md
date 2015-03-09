@@ -1,15 +1,46 @@
 DI.js
 ===
 
-### Getting Started
+Dependency injection framework for the browser and Node.js.
 
-### How to use
+The dependency injection pattern is about providing dependent objects to an object instead of the object itself having to
+construct them. This is a very useful technique for testing since it allows dependencies to be mocked or stubbed out.
+
+If you're interested in the theory, check out [Martin Fowler's article](http://martinfowler.com/articles/injection.html)
+
+There are three main parts to the framework:
+1. Service. A javascript object. Some logical piece of your application.
+2. Module. A logical group of public and private services. One or more modules forms a container.
+3. Container. Responsible for instantiating and injecting services into dependent services. Also known as an injector.
+
+## Usage
+
+TODO :)
+
+### Example
 
 ```javascript
 
 ```
 
-### License
+### Registering Services
+
+### Creating Module
+
+### Creating Container
+
+## Installation
+
+The library is written with CommonJS modules. If you are using Browserify, Webpack, or similar you can consume it like
+anything else installed from npm.
+
+There is also a global UMD compliant build available in the `dist` folder. The library registers on `window.di`.
+
+## Browser Support
+
+IE 9+, IE6+ support is available using an ES5 polyfill such as [ES5-Shim](https://github.com/es-shims/es5-shim)
+
+## License
 
 The MIT License (MIT)
 
