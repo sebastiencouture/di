@@ -24,7 +24,8 @@ TODO :)
 // Create a new module
 var core = new Module();
 
-// Create a simple logger service, we have one dependency which is the configuration for the service when it is instantiated
+// Create a simple logger service, we have one dependency which is the configuration
+// for the service when it is instantiated
 core.factory("log", ["$config"], function($config) {
     var disabled = $config.disabled;
     var targets = $config.targets;
@@ -49,12 +50,13 @@ core.factory("logConsole", ["$window"], function($window) {
     };
 });
 
-// Create $window service which is simply the global window. Good use for doing this is it allows us to easily mock $window
-// for unit testing if we want.
+// Create $window service which is simply the global window. Good use for doing
+// this is it allows us to easily mock $window for unit testing if we want.
 core.value("$window", window);
 
-// Export log and logConsole services. log and logConsole will be available to use when injected into a container (public).
-// $window will only be usable by services within this module (private).
+// Export log and logConsole services. log and logConsole will be available to
+// use  when injected into a container (public). $window will only be usable by
+// services within this module (private).
 core.exports(["log", "logConsole"]);
 
 // Create another module that is dependent on the core
@@ -68,8 +70,9 @@ app.config("log", ["logConsole"], function(logConsole) {
     };
 });
 
-// Create a container that contains the core and app modules. There is no need to specify the core module since it is
-// dependent module of the app module. You can specify it if you want, but it is not needed.
+// Create a container that contains the core and app modules. There is no need
+// to specify the core module since it is dependent module of the app module.
+// You can specify it if you want, but it is not needed.
 var container = new Container([app]);
 
 // Now we can inject everything which will instantiate all services
