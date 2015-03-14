@@ -62,8 +62,10 @@ core.exports(["log", "logConsole"]);
 // Create another module that is dependent on the core
 var app = new Module([core]);
 
-// Setup configuration for our logger service
-app.config("log", ["logConsole"], function(logConsole) {
+// Setup configuration for our logger service. If you don't have any
+// dependent services for the config then you can use the helper
+// app.config("log", {});
+app.factory("$config.log", ["logConsole"], function(logConsole) {
     return {
         disabled: false,
         targets: [logConsole]
