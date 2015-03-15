@@ -1,7 +1,7 @@
 {
     "name": "di-inject",
     "author": "Sebastien Couture",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "repository": {
         "type": "git",
         "url": "git://github.com/sebastiencouture/di.git"

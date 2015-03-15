@@ -1,5 +1,5 @@
 /*!
-di.js - v0.1.1
+di.js - v0.1.2
 Created by Sebastien Couture on 2015-03-15.
 
 git://github.com/sebastiencouture/di.git
@@ -429,14 +429,13 @@ Module.prototype = {
     },
 
     /**
-     * Configure services that are exported by the module. Exported/public services are usable in other modules that
-     * use this module as a dependent module. Non exported/private services can only be used within the module they
-     * belong to.
+     * Configure services that are exported (public) by the module. Public services are usable in other modules that
+     * use this module as a dependent module. Private services can only be used within the module.
      *
-     * This is useful if you have services that you don't want to expose, and to avoid having to worry
-     * about name collisions. A private service name is unique to the module, multiple modules can have private services
-     * with the same names. A public service name is unique to the container, there can only be one public service with
-     * a name.
+     * This is useful if you have services that you don't want to make public outside of the module, and to avoid having
+     * to worry about name collisions with other modules. A private service name is unique to the module, multiple modules
+     * can have private services with the same names. A public service name is unique to the container, there can only
+     * be one public service with a name.
      *
      * By default all services are exported in a module
      *
