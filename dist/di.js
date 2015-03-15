@@ -1,6 +1,6 @@
 /*!
-di.js - v0.1.0
-Created by Sebastien Couture on 2015-03-08.
+di.js - v0.1.1
+Created by Sebastien Couture on 2015-03-15.
 
 git://github.com/sebastiencouture/di.git
 
@@ -34,6 +34,12 @@ var Module = require("./module");
 
 var CONTAINER_SERVICE_NAME = "$container";
 
+/**
+ * @param modules Array or one module that forms the container
+ * @constructor
+ * @returns {Container}
+ * @throws Error if no modules
+ */
 module.exports = function(modules) {
     utils.assert(modules, "no modules specified for container");
 
@@ -94,12 +100,28 @@ module.exports = function(modules) {
         return unique;
     }
 
+    /**
+     * Creates all service instances
+     */
     function load() {
         utils.forEach(services, function(service, name){
             get(name);
         });
     }
 
+    /**
+     * Invoke a method with instantiated services as parameters
+     *
+     * @example
+     * container.invoke(["$window, log], function($window, log) {
+     *      // service instances available
+     * });
+     *
+     * @param dependencies Array of services
+     * @param method Method that will be invoked with the dependent service instances as parameters
+     * @param context Context for the method
+     * @returns {*} Value returned by the invoked method
+     */
     function invoke(dependencies, method, context) {
         var dependencyInstances = getDependencyInstances(dependencies);
         return method.apply(context, dependencyInstances);
@@ -107,6 +129,16 @@ module.exports = function(modules) {
 
     var resolving = [];
 
+    /**
+     * Returns a service instance
+     *
+     * @param name The name of the service
+     * @returns {*} Service instance
+     * @throws Error if the service does not exist or is not public
+     * @throws Error if there is a circular dependency between services
+     * @throws Error if the service factory does not return an instance
+     * @throws Error if a service decorator does not return an instance
+     */
     function get(name) {
         if (instances[name]) {
             return instances[name];
@@ -172,6 +204,10 @@ var utils = require("./utils");
 
 module.exports = Module;
 
+/**
+ * @param dependentModules Array of dependent modules, or a module
+ * @constructor
+ */
 function Module(dependentModules) {
     if (!utils.isArray(dependentModules)) {
         dependentModules = dependentModules ? [dependentModules] : [];
@@ -184,10 +220,30 @@ function Module(dependentModules) {
 }
 
 Module.prototype = {
-    exports: function(names) {
-        this._exportNames = names;
-    },
-
+    /**
+     * Registers a service with the module
+     *
+     * @example
+     * module.factory("log", ["$window"], function($window) {
+     *      // return the service instance
+     *      return {
+     *          debug: function(message) {
+     *          }
+     *     };
+     * });
+     *
+     * var log = container.get("log");
+     * log.debug("wow");
+     *
+     * @param name Name of the service
+     * @param dependencies Array of dependent services. If none pass in null. The services will be passed in order
+     * to the factory method as arguments
+     * @param factory Method that is responsible for creating the service. The value returned from this method
+     * will be the instance of the service
+     * @returns {Module}
+     * @throws Error if no name
+     * @throws Error if the factory is not a function
+     */
     factory: function(name, dependencies, factory) {
         utils.assert(name, "service requires a name");
         utils.assert(utils.isFunction(factory), "factory services requires a function provider");
@@ -198,39 +254,134 @@ Module.prototype = {
         return this;
     },
 
-    type: function(name, dependencies, Type) {
+    /**
+     * Helper method that registers one Type/Class instance as a service (singleton)
+     *
+     * @example
+     * var Log = function($window) {
+     * };
+     * Log.prototype = {
+     *      debug: function(message) {
+     *      };
+     * };
+     *
+     * module.type("log", ["$window"], Log);
+     *
+     * var log = container.get("log");
+     * log.debug("wow");
+     *
+     * @param name Name of the service
+     * @param dependencies Array of dependent services. If none pass in null. The services will be passed in order
+     * to the Type constructor as arguments
+     * @param Constructor Type/Class constructor
+     * @returns {Module}
+     */
+    type: function(name, dependencies, Constructor) {
         // guess it to be a function constructor...
-        utils.assert(utils.isFunction(Type), "factory services requires a function constructor");
+        utils.assert(utils.isFunction(Constructor), "factory services requires a function constructor");
 
         return this.factory(name, dependencies, function() {
-            var instance = Object.create(Type.prototype);
-            instance = Type.apply(instance, utils.argumentsToArray(arguments)) || instance;
+            var instance = Object.create(Constructor.prototype);
+            instance = Constructor.apply(instance, utils.argumentsToArray(arguments)) || instance;
 
             return instance;
         });
     },
 
-    typeFactory: function(name, dependencies, Type) {
+    /**
+     * Helper method that registers a Type/Class factory method. Calling the factory method will create an instance
+     * of the Type/Class. Arguments passed to the factory method will be passed to the constructor along with dependent
+     * services.
+     *
+     * @example
+     * var Log = function($window, name) {
+     * };
+     * Log.prototype = {
+     *      debug: function(message) {
+     *      };
+     * };
+     *
+     * module.typeFactory("logFactory", ["$window"], Log);
+     *
+     * var logFactory = container.get("logFactory");
+     * var coreLog = logFactory("core");
+     * coreLog.debug("wow");
+     *
+     * @param name Name of the service
+     * @param dependencies Array of dependent services. If none pass in null. The services will be passed in order
+     * to the Type constructor as arguments
+     * @param Constructor Type/Class constructor
+     * @returns {Module}
+     * @throws Error if Type is not a function constructor
+     */
+    typeFactory: function(name, dependencies, Constructor) {
         // guess it to be a function constructor...
-        utils.assert(utils.isFunction(Type), "factory services requires a function constructor");
+        utils.assert(utils.isFunction(Constructor), "factory services requires a function constructor");
 
         return this.factory(name, dependencies, function() {
             var factoryArgs = utils.argumentsToArray(arguments);
             return function() {
-                var instance = Object.create(Type.prototype);
-                instance = Type.apply(instance, factoryArgs.concat(utils.argumentsToArray(arguments))) || instance;
+                var instance = Object.create(Constructor.prototype);
+                instance = Constructor.apply(instance, factoryArgs.concat(utils.argumentsToArray(arguments))) || instance;
 
                 return instance;
             };
         });
     },
 
+    /**
+     * Helper method that registers the value as a service. The value can be anything: object, string, Type/Class, etc.
+     *
+     * @example
+     * module.config("settings", {
+     *      apiUrl: "www.test.com/api",
+     *      imageUrl: "www.test.com/images
+     * });
+     *
+     * @param name Name of the service
+     * @param value The service
+     * @returns {Module}
+     */
     value: function(name, value) {
         return this.factory(name, null, function() {
             return value;
         });
     },
 
+    /**
+     * Registers a service decorator. A decorator is used to modify or enhance a service before it is instantiated.
+     * A general use case would be to modify or enhance a service provided by some other module.
+     *
+     * @example
+     * module.factory("log", ["$window"], function() {
+     *      return {
+     *          debug: function(message) {
+     *          }
+     *     };
+     * });
+     *
+     * module.decorator("log", ["utils"], function(log, utils) {
+     *      var debug = log.debug;
+     *      // Enhance the log debug method by including "[DEBUG]:" with each message
+     *      log.debug = function(message) {
+     *          message =  "[DEBUG]: " + message;
+     *          debug.call(this, message);
+     *      };
+     *
+     *      return log;
+     * }
+     *
+     * var log = container.get("log");
+     * log.debug("wow"); // outputs [DEBUG]: wow
+     *
+     * @param name The name of the service to decorate
+     * @param dependencies Array of dependent services
+     * @param decorator Method that returns the decorated service. The service will be passed as the first argument,
+     * dependent services will be passed starting from the second argument onwards
+     * @returns {Module}
+     * @throws Error if no name
+     * @throws Error if decorator is not a method
+     */
     decorator: function(name, dependencies, decorator) {
         utils.assert(name,  "decorator service requires a name");
         utils.assert(utils.isFunction(decorator), "decorator service requires a function provider");
@@ -241,12 +392,64 @@ Module.prototype = {
         return this;
     },
 
+    /**
+     * Registers a configuration for a service. Each service can have one configuration. The configuration can be accessed
+     * by the service as a dependency named "$config".
+     *
+     * @example
+     * module.config("log", {enabled: true});
+     *
+     * The configuration can then be accessed by the service:
+     *
+     * @example
+     * module.factory("log", ["$config"], function($config) {
+     *     var enabled = $config.enabled; // true
+     * });
+     *
+     * This method is simply a wrapper for registering a service named "config.<service name>". If your configuration
+     * has dependencies then you can register the configuration as:
+     *
+     * @example
+     * module.factory("config.log", ["logConsole"], function(logConsole) {
+     *      return {
+     *          enabled: true,
+     *          targets: [logConsole]
+     *      };
+     * });
+     *
+     * @param name The name of the service to configure
+     * @param config The configuration for the service. The configuration can be anything: Object, String, Array, etc.
+     * @returns {Module}
+     * @throws Error if no name
+     */
     config: function(name, config) {
         utils.assert(name, "config service requires a name");
 
         return this.value("config." + name , config);
     },
 
+    /**
+     * Configure services that are exported by the module. Exported/public services are usable in other modules that
+     * use this module as a dependent module. Non exported/private services can only be used within the module they
+     * belong to.
+     *
+     * This is useful if you have services that you don't want to expose, and to avoid having to worry
+     * about name collisions. A private service name is unique to the module, multiple modules can have private services
+     * with the same names. A public service name is unique to the container, there can only be one public service with
+     * a name.
+     *
+     * By default all services are exported in a module
+     *
+     * @param names Array of service names to export. If null or an empty array is provided then all services are
+     * exported
+     */
+    exports: function(names) {
+        this._exportNames = names;
+    },
+
+    /**
+     * @returns {{services: *, decorators: *}} Arrays of public services and decorators
+     */
     exported: function() {
         var exportedServices = utils.extend({}, this._services);
         var exportedDecorators = utils.extend({}, this._decorators);
