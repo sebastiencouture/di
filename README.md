@@ -286,6 +286,12 @@ anything else installed from npm or bower.
 
 There is also a global UMD compliant build available in the `dist` folder. The build is created with Browserify. The library registers on `window.di`.
 
+## Running the Tests
+
+```
+grunt test
+```
+
 ## Browser Support
 
 IE 9+
