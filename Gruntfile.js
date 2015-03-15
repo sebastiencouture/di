@@ -4,18 +4,19 @@ module.exports = function(grunt) {
     require('load-grunt-tasks')(grunt);
 
     var banner =
-        '/*!\n<%= pkg.name %>.js - v<%= pkg.version %>\n' +
+        '/*!\n<%= libName %>.js - v<%= pkg.version %>\n' +
             'Created by <%= pkg.author %> on <%=grunt.template.today("yyyy-mm-dd") %>.\n\n' +
             '<%= pkg.repository.url %>\n\n' +
             '<%= license %> \n' +
             '*/';
-    var minBanner = '/*! <%= pkg.name %>.js - v<%= pkg.version %> - by <%= pkg.author %> ' +
+    var minBanner = '/*! <%= libName %>.js - v<%= pkg.version %> - by <%= pkg.author %> ' +
         '<%= grunt.template.today("yyyy-mm-dd") %> */';
 
 
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         license: grunt.file.read("LICENSE"),
+        libName: "di",
         srcDir: "src",
         buildDir: "build",
         testDir: "test",
@@ -32,7 +33,7 @@ module.exports = function(grunt) {
                 },
 
                 files: {
-                    "<%= buildDir %>/<%= pkg.name %>.js" : "<%= srcDir %>/<%= pkg.name %>.js"
+                    "<%= buildDir %>/<%= libName %>.js" : "<%= srcDir %>/<%= libName %>.js"
                 }
             },
 
@@ -44,7 +45,7 @@ module.exports = function(grunt) {
                 },
 
                 files: {
-                    "<%= buildDir %>/<%= pkg.name %>.spec.js" : "<%= testDir %>/**/*.spec.js"
+                    "<%= buildDir %>/<%= libName %>.spec.js" : "<%= testDir %>/**/*.spec.js"
                 }
             }
         },
@@ -56,7 +57,7 @@ module.exports = function(grunt) {
 
             dev: {
                 files: {
-                    "<%= distDir %>/<%= pkg.name %>.min.js": "<%= buildDir %>/<%= pkg.name %>.js"
+                    "<%= distDir %>/<%= libName %>.min.js": "<%= buildDir %>/<%= libName %>.js"
                 }
             }
         },
@@ -67,7 +68,7 @@ module.exports = function(grunt) {
                     banner: banner + "\n\n"
                 },
                 files: {
-                    "<%= distDir %>/<%= pkg.name %>.js": "<%= buildDir %>/<%= pkg.name %>.js"
+                    "<%= distDir %>/<%= libName %>.js": "<%= buildDir %>/<%= libName %>.js"
                 }
             }
         },
