@@ -91,15 +91,196 @@ container.invoke(["log"], function(log) {
 });
 ```
 
-### Registering Services
+### Creating a Module
+
+#### Module(dependentModules)
+
+```javascript
+var core = new Module();
+var app = new Module(core);
+```
+
+### Registering Module Services
+
+#### factory(name, dependencies, factory)
+
+Registers a service with the module
+
+```javascript
+module.factory("log", ["$window"], function($window) {
+    // return the service instance
+    return {
+        debug: function(message) {
+        }
+    };
+});
+
+var log = container.get("log");
+log.debug("wow");
+```
+
+#### type(name, dependencies, Constructor)
+
+Helper method that registers a Type/Class instance as a service
+
+```javascript
+var Log = function($window) {
+};
+Log.prototype = {
+    debug: function(message) {
+    };
+};
+
+module.type("log", ["$window"], Log);
+
+var log = container.get("log");
+log.debug("wow");
+```
+
+#### typeFactory(name, dependencies, Constructor
+
+Helper method that registers a Type/Class factory method. Calling the factory method will create an instance
+of the Type/Class. Arguments passed to the factory method will be passed to the constructor along with dependent
+services.
+
+```javascript
+var Log = function($window, name) {
+};
+Log.prototype = {
+     debug: function(message) {
+     };
+};
+
+module.typeFactory("logFactory", ["$window"], Log);
+
+var logFactory = container.get("logFactory");
+var httpLog = logFactory("http");
+httpLog.debug("wow");
+```
+
+#### value(name, value)
+
+Helper method that registers the value as a service. The value can be anything: object, string, Type/Class, etc.
+
+```javascript
+module.config("settings", {
+    apiUrl: "www.test.com/api",
+    imageUrl: "www.test.com/images
+});
+```
+
+#### decorator(name, dependencies, decorator)
+
+Registers a service decorator. A decorator is used to modify or enhance a service before it is instantiated.
+A general use case would be to modify or enhance a service provided by some other module.
+
+```javascript
+module.factory("log", ["$window"], function() {
+    return {
+        debug: function(message) {
+        }
+    };
+});
+
+module.decorator("log", ["utils"], function(log, utils) {
+    var debug = log.debug;
+    // Enhance the log debug method by including "[DEBUG]:" with each message
+    log.debug = function(message) {
+        message =  "[DEBUG]: " + message;
+        debug.call(this, message);
+    };
+
+    return log;
+}
+
+var log = container.get("log");
+log.debug("wow"); // outputs [DEBUG]: wow
+```
+
+#### config(name, config)
+
+Registers a configuration for a service. Each service can have one configuration. The configuration can be accessed
+by the service as a dependency named "$config".
+
+```javascript
+module.config("log", {enabled: true});
+```
+
+The configuration can then be accessed by the service:
+
+```javascript
+module.factory("log", ["$config"], function($config) {
+    var enabled = $config.enabled; // true
+});
+```
+
+This method is simply a wrapper for registering a service named "config.<service name>". If your configuration
+has dependencies then you can register the configuration as:
+
+```javascript
+module.factory("config.log", ["logConsole"], function(logConsole) {
+    return {
+        enabled: true,
+        targets: [logConsole]
+    };
+});
+```
 
 ### Exporting Services
 
-### Creating Module
+#### exports(names)
 
-### Creating Container
+Configure services that are exported by the module. Exported/public services are usable in other modules that
+use this module as a dependent module. Non exported/private services can only be used within the module they
+belong to.
 
-### Instantiating Services
+This is useful if you have services that you don't want to expose, and to avoid having to worry
+about name collisions. A private service name is unique to the module, multiple modules can have private services
+with the same names. A public service name is unique to the container, there can only be one public service with
+a name.
+
+By default all services are exported in a module.
+
+```javascript
+module.exports(["log"]);
+```
+
+### Creating a Container
+
+#### Container(modules)
+
+```javascript
+var container = new Container([moduleA, moduleB]);
+```
+
+### Instantiating Container Services
+
+#### load()
+
+Creates all service instances at once
+
+```javascript
+container.load();
+```
+
+#### invoke(dependencies, method, context)
+
+Invokes a method with instantiated services as parameters
+
+```javascript
+container.invoke(["$window, log], function($window, log) {
+    // service instances available
+});
+```
+
+#### get(name)
+
+Get a service instance
+
+```javascript
+var log = container.get("log");
+log.debug("wow");
+```
 
 ## Installation
 
