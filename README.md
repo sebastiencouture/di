@@ -60,12 +60,13 @@ core.value("$window", window);
 core.exports(["log", "logConsole"]);
 
 // Create another module that is dependent on the core
-var app = new Module([core]);
+var app = new Module(core);
 
 // Setup configuration for our logger service. If you don't have any
 // dependent services for the config then you can use the helper
-// app.config("log", {});
-app.factory("$config.log", ["logConsole"], function(logConsole) {
+// app.config("log", {});. The configuration of the service can be
+// accessed as by the service as a dependency named "$config"
+app.factory("config.log", ["logConsole"], function(logConsole) {
     return {
         disabled: false,
         targets: [logConsole]
@@ -75,21 +76,30 @@ app.factory("$config.log", ["logConsole"], function(logConsole) {
 // Create a container that contains the core and app modules. There is no need
 // to specify the core module since it is dependent module of the app module.
 // You can specify it if you want, but it is not needed.
-var container = new Container([app]);
+var container = new Container(app);
 
 // Now we can inject everything which will instantiate all services
 container.load();
 
-// ... Or we can simply instantiate on demand
+// ... or we can simply instantiate on demand
 var log = container.get("log");
 log("oh ya");
+
+// ... or as
+container.invoke(["log"], function(log) {
+    log("oh ya again");
+});
 ```
 
 ### Registering Services
 
+### Exporting Services
+
 ### Creating Module
 
 ### Creating Container
+
+### Instantiating Services
 
 ## Installation
 
