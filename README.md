@@ -214,7 +214,7 @@ module.factory("log", ["$config"], function($config) {
 });
 ```
 
-This method is simply a wrapper for registering a service named "config.<service name>". If your configuration
+This method is simply a wrapper for registering a service named "config.*service_name*". If your configuration
 has dependencies then you can register the configuration as:
 
 ```javascript
@@ -230,12 +230,11 @@ module.factory("config.log", ["logConsole"], function(logConsole) {
 
 #### exports(names)
 
-Configure services that are exported by the module. Exported/public services are usable in other modules that
-use this module as a dependent module. Non exported/private services can only be used within the module they
-belong to.
+Configure services that are exported (public) by the module. Public services are usable in other modules that
+use this module as a dependent module. Private services can only be used within the module.
 
-This is useful if you have services that you don't want to expose, and to avoid having to worry
-about name collisions. A private service name is unique to the module, multiple modules can have private services
+This is useful if you have services that you don't want to make public outside of the module, and to avoid having to worry
+about name collisions with other modules. A private service name is unique to the module, multiple modules can have private services
 with the same names. A public service name is unique to the container, there can only be one public service with
 a name.
 
