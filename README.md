@@ -89,6 +89,8 @@ container.invoke(["log"], function(log) {
 });
 ```
 
+For more examples, take look at the [container unit tests](test/container.spec.js)
+
 ### Creating a Module
 
 #### Module(dependentModules)
@@ -284,7 +286,7 @@ log.debug("wow");
 The library is written with CommonJS modules. If you are using Browserify, Webpack, or similar you can consume it like
 anything else installed from npm or bower.
 
-There is also a global UMD compliant build available in the `dist` folder. The build is created with Browserify. The library registers on `window.di`.
+There is also a global UMD compliant build available in [dist](dist). The build is created with Browserify. The library registers on `window.di`.
 
 ## Running the Tests
 
