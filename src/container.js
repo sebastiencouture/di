@@ -81,7 +81,7 @@ module.exports = function(modules) {
     }
 
     /**
-     * Invoke a method with set of instantiated services as parameters
+     * Invoke a method with instantiated services as parameters
      *
      * @example
      * container.invoke(["$window, log], function($window, log) {

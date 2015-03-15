@@ -26,6 +26,7 @@ Module.prototype = {
      *
      * @example
      * module.factory("log", ["$window"], function($window) {
+     *      // return the service instance
      *      return {
      *          debug: function(message) {
      *          }
@@ -65,7 +66,7 @@ Module.prototype = {
      *      };
      * };
      *
-     * module.typeFactory("logFactory", ["$window"], Log);
+     * module.type("log", ["$window"], Log);
      *
      * var log = container.get("log");
      * log.debug("wow");
@@ -73,17 +74,16 @@ Module.prototype = {
      * @param name Name of the service
      * @param dependencies Array of dependent services. If none pass in null. The services will be passed in order
      * to the Type constructor as arguments
-     * @param Type  Method that is responsible for creating the Type/Class. The method must return a Type/Class,
-     * but not an instance of a Type/Class
+     * @param Constructor Type/Class constructor
      * @returns {Module}
      */
-    type: function(name, dependencies, Type) {
+    type: function(name, dependencies, Constructor) {
         // guess it to be a function constructor...
-        utils.assert(utils.isFunction(Type), "factory services requires a function constructor");
+        utils.assert(utils.isFunction(Constructor), "factory services requires a function constructor");
 
         return this.factory(name, dependencies, function() {
-            var instance = Object.create(Type.prototype);
-            instance = Type.apply(instance, utils.argumentsToArray(arguments)) || instance;
+            var instance = Object.create(Constructor.prototype);
+            instance = Constructor.apply(instance, utils.argumentsToArray(arguments)) || instance;
 
             return instance;
         });
@@ -111,19 +111,19 @@ Module.prototype = {
      * @param name Name of the service
      * @param dependencies Array of dependent services. If none pass in null. The services will be passed in order
      * to the Type constructor as arguments
-     * @param Type  Type/Class constructor
+     * @param Constructor Type/Class constructor
      * @returns {Module}
      * @throws Error if Type is not a function constructor
      */
-    typeFactory: function(name, dependencies, Type) {
+    typeFactory: function(name, dependencies, Constructor) {
         // guess it to be a function constructor...
-        utils.assert(utils.isFunction(Type), "factory services requires a function constructor");
+        utils.assert(utils.isFunction(Constructor), "factory services requires a function constructor");
 
         return this.factory(name, dependencies, function() {
             var factoryArgs = utils.argumentsToArray(arguments);
             return function() {
-                var instance = Object.create(Type.prototype);
-                instance = Type.apply(instance, factoryArgs.concat(utils.argumentsToArray(arguments))) || instance;
+                var instance = Object.create(Constructor.prototype);
+                instance = Constructor.apply(instance, factoryArgs.concat(utils.argumentsToArray(arguments))) || instance;
 
                 return instance;
             };
@@ -173,7 +173,7 @@ Module.prototype = {
      * }
      *
      * var log = container.get("log");
-     * log.debug("wow"); // would output [DEBUG]: wow
+     * log.debug("wow"); // outputs [DEBUG]: wow
      *
      * @param name The name of the service to decorate
      * @param dependencies Array of dependent services
@@ -239,7 +239,7 @@ Module.prototype = {
      * with the same names. A public service name is unique to the container, there can only be one public service with
      * a name.
      *
-     * By default all services are exported.
+     * By default all services are exported in a module
      *
      * @param names Array of service names to export. If null or an empty array is provided then all services are
      * exported
