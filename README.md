@@ -16,8 +16,6 @@ There are three main parts to the framework:
 
 ## Usage
 
-TODO :)
-
 ### Example
 
 ```javascript
