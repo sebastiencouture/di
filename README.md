@@ -288,6 +288,10 @@ anything else installed from npm or bower.
 
 There is also a global UMD compliant build available in [dist](dist). The build is created with Browserify. The library registers on `window.di`.
 
+```
+npm install di-inject
+```
+
 ## Running the Tests
 
 ```
