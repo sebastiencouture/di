@@ -18,7 +18,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'build/di.spec.js'
+      'build/recurve-di.spec.js'
     ],
 
     // list of files / patterns to exclude
