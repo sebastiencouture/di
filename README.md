@@ -1,4 +1,4 @@
-recurve-di.js [![Build Status](https://secure.travis-ci.org/sebastiencouture/di.png?branch=master)](https://travis-ci.org/sebastiencouture/di)
+recurve-di.js [![Build Status](https://secure.travis-ci.org/sebastiencouture/recurve-di.png?branch=master)](https://travis-ci.org/sebastiencouture/recurve-di)
 ===
 
 Dependency injection framework for the browser and Node.js.

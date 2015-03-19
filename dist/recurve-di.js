@@ -1,5 +1,5 @@
 /*!
-recurve-di.js - v0.1.2
+recurve-di.js - v0.1.3
 Created by Sebastien Couture on 2015-03-18.
 
 git://github.com/sebastiencouture/recurve-di.git

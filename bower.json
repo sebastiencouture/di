@@ -1,5 +1,5 @@
 {
-  "name": "di",
+  "name": "recurve-di",
   "version": "0.0.0",
   "author": "Sebastien Couture",
   "main": "dist/recurve-di.js",
