@@ -1,4 +1,4 @@
-DI.js [![Build Status](https://secure.travis-ci.org/sebastiencouture/di.png?branch=master)](https://travis-ci.org/sebastiencouture/di)
+recurve-di.js [![Build Status](https://secure.travis-ci.org/sebastiencouture/di.png?branch=master)](https://travis-ci.org/sebastiencouture/di)
 ===
 
 Dependency injection framework for the browser and Node.js.
@@ -289,7 +289,7 @@ anything else installed from npm or bower.
 There is also a global UMD compliant build available in [dist](dist). The build is created with Browserify. The library registers on `window.di`.
 
 ```
-npm install di-inject
+npm install recurve-di
 ```
 
 ## Running the Tests

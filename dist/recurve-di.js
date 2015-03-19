@@ -1,8 +1,8 @@
 /*!
-di.js - v0.1.2
-Created by Sebastien Couture on 2015-03-15.
+recurve-di.js - v0.1.2
+Created by Sebastien Couture on 2015-03-18.
 
-git://github.com/sebastiencouture/di.git
+git://github.com/sebastiencouture/recurve-di.git
 
 The MIT License (MIT)
 
@@ -190,13 +190,7 @@ module.exports = function(modules) {
 
     return get(CONTAINER_SERVICE_NAME);
 };
-},{"./module":3,"./utils":4}],2:[function(require,module,exports){
-"use strict";
-
-module.exports.Module = require("./module");
-module.exports.Container = require("./container");
-module.exports.VERSION = "0.1.0";
-},{"./container":1,"./module":3}],3:[function(require,module,exports){
+},{"./module":2,"./utils":4}],2:[function(require,module,exports){
 
 "use strict";
 
@@ -555,7 +549,13 @@ function updateNameForExport(oldName, exportedServices, exportedDecorators) {
         return cloned;
     }
 }
-},{"./utils":4}],4:[function(require,module,exports){
+},{"./utils":4}],3:[function(require,module,exports){
+"use strict";
+
+module.exports.Module = require("./module");
+module.exports.Container = require("./container");
+module.exports.VERSION = "0.1.0";
+},{"./container":1,"./module":2}],4:[function(require,module,exports){
 "use strict";
 
 function forEach(obj, iterator, context) {
@@ -677,5 +677,5 @@ module.exports = {
     format: format,
     generateUUID: generateUUID
 };
-},{}]},{},[2])(2)
+},{}]},{},[3])(3)
 });
