@@ -2,6 +2,7 @@
     "name": "recurve-di",
     "author": "Sebastien Couture",
     "version": "0.1.4",
+    "main": "src/recurve-di.js",
     "repository": {
         "type": "git",
         "url": "git://github.com/sebastiencouture/recurve-di.git"
