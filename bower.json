@@ -1,6 +1,6 @@
 {
   "name": "recurve-di",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "Sebastien Couture",
   "main": "dist/recurve-di.js",
   "license": "MIT",

@@ -1,6 +1,6 @@
 /*!
-recurve-di.js - v0.1.4
-Created by Sebastien Couture on 2015-03-18.
+recurve-di.js - v0.1.5
+Created by Sebastien Couture on 2015-03-22.
 
 git://github.com/sebastiencouture/recurve-di.git
 
@@ -554,7 +554,7 @@ function updateNameForExport(oldName, exportedServices, exportedDecorators) {
 
 module.exports.Module = require("./module");
 module.exports.Container = require("./container");
-module.exports.VERSION = "0.1.4";
+module.exports.VERSION = "0.1.5";
 },{"./container":1,"./module":2}],4:[function(require,module,exports){
 "use strict";
 
